@@ -4,10 +4,13 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import br.com.zupacademy.rodrigo.mercadolivre.validator.UniqueValue;
+
 public class UsuarioRequest {
 
 	@NotBlank
 	@Email
+	@UniqueValue(domainClass = Usuario.class, fieldName = "login")
 	private String login;
 
 	@NotBlank
