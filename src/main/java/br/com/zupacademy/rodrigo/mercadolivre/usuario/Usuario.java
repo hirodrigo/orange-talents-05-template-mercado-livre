@@ -42,4 +42,12 @@ public class Usuario {
 		this.instanteCadastro = LocalDateTime.now();
 	}
 
+	public String getLogin() {
+		return login;
+	}
+
+	public String getSenha() {
+		return senha;
+	}
+
 }
