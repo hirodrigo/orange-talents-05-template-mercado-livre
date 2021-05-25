@@ -15,6 +15,10 @@ public class UsuarioLogado implements UserDetails {
 	public UsuarioLogado(Usuario usuario) {
 		this.usuario = usuario;
 	}
+	
+	public Usuario getUsuario() {
+		return usuario;
+	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
