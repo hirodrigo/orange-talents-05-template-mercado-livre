@@ -3,6 +3,7 @@ package br.com.zupacademy.rodrigo.mercadolivre.produto;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -23,6 +24,8 @@ import javax.validation.constraints.Size;
 import org.springframework.util.Assert;
 
 import br.com.zupacademy.rodrigo.mercadolivre.categoria.Categoria;
+import br.com.zupacademy.rodrigo.mercadolivre.produto.caracteristica.CaracteristicaProduto;
+import br.com.zupacademy.rodrigo.mercadolivre.produto.imagem.ImagemProduto;
 import br.com.zupacademy.rodrigo.mercadolivre.usuario.Usuario;
 
 @Entity
@@ -46,7 +49,7 @@ public class Produto {
 	@NotNull
 	@Size(min = 3)
 	@OneToMany(mappedBy = "produto", cascade = CascadeType.PERSIST)
-	private Set<br.com.zupacademy.rodrigo.mercadolivre.produto.caracteristica.CaracteristicaProduto> caracteristicas;
+	private Set<CaracteristicaProduto> caracteristicas;
 
 	@NotBlank
 	@Size(max = 1000)
@@ -61,6 +64,9 @@ public class Produto {
 
 	@ManyToOne
 	private Usuario usuario;
+	
+	@OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
+	private Set<@Valid ImagemProduto> imagens;
 
 	@Deprecated
 	public Produto() {
@@ -81,6 +87,17 @@ public class Produto {
 
 		Assert.isTrue(this.caracteristicas.size() >= 3, "Produtos precisam ter 3 categorias ou mais.");
 		Assert.isTrue(this.categoria != null, "Produtos pertencer a uma categoria.");
+	}
+	
+	public boolean pertenceAoUsuario(Usuario usuario) {
+		return this.usuario.equals(usuario);
+	}
+
+	public void adicionarImagens(Collection<String> links) {
+		for (String link : links) {
+			ImagemProduto imagem = new ImagemProduto(link, this);
+			this.imagens.add(imagem);
+		}
 	}
 
 }
