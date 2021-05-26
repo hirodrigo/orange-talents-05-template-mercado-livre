@@ -25,7 +25,9 @@ import org.springframework.util.Assert;
 
 import br.com.zupacademy.rodrigo.mercadolivre.categoria.Categoria;
 import br.com.zupacademy.rodrigo.mercadolivre.produto.caracteristica.CaracteristicaProduto;
+import br.com.zupacademy.rodrigo.mercadolivre.produto.caracteristica.CaracteristicaProdutoRequest;
 import br.com.zupacademy.rodrigo.mercadolivre.produto.imagem.ImagemProduto;
+import br.com.zupacademy.rodrigo.mercadolivre.produto.opiniao.OpiniaoProduto;
 import br.com.zupacademy.rodrigo.mercadolivre.usuario.Usuario;
 
 @Entity
@@ -67,6 +69,9 @@ public class Produto {
 	
 	@OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
 	private Set<@Valid ImagemProduto> imagens;
+	
+	@OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
+	private Set<@Valid OpiniaoProduto> opinioes;
 
 	@Deprecated
 	public Produto() {
@@ -74,7 +79,7 @@ public class Produto {
 
 	public Produto(@NotBlank String nome, @NotNull @Positive BigDecimal valor,
 			@NotNull @PositiveOrZero BigInteger qtdDisponivel,
-			@NotNull @Size(min = 3) Set<br.com.zupacademy.rodrigo.mercadolivre.produto.caracteristica.CaracteristicaProdutoRequest> caracteristicas,
+			@NotNull @Size(min = 3) Set<CaracteristicaProdutoRequest> caracteristicas,
 			@NotBlank @Size(max = 1000) String descricao, @NotNull Categoria categoria, Usuario usuario) {
 		this.nome = nome;
 		this.valor = valor;
@@ -98,6 +103,10 @@ public class Produto {
 			ImagemProduto imagem = new ImagemProduto(link, this);
 			this.imagens.add(imagem);
 		}
+	}
+
+	public void adicionarOpiniao(OpiniaoProduto opiniaoProduto) {
+		opinioes.add(opiniaoProduto);
 	}
 
 }

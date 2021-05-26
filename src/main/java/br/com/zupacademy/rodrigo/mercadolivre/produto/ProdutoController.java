@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.zupacademy.rodrigo.mercadolivre.categoria.CategoriaRepository;
 import br.com.zupacademy.rodrigo.mercadolivre.produto.imagem.ImagensProdutoRequest;
+import br.com.zupacademy.rodrigo.mercadolivre.produto.opiniao.OpiniaoProduto;
+import br.com.zupacademy.rodrigo.mercadolivre.produto.opiniao.OpiniaoProdutoRequest;
 import br.com.zupacademy.rodrigo.mercadolivre.security.UsuarioLogado;
 import br.com.zupacademy.rodrigo.mercadolivre.uploader.Uploader;
 import br.com.zupacademy.rodrigo.mercadolivre.uploader.s3uploader.s3Uploader;
@@ -48,25 +50,47 @@ public class ProdutoController {
 	@Transactional
 	private ResponseEntity<?> cadastrarImagemProduto(@PathVariable Long id, @Valid ImagensProdutoRequest request,
 			@AuthenticationPrincipal UsuarioLogado usuarioLogado) {
-		
+
 		Optional<Produto> possivelProduto = produtoRepository.findById(id);
-		if(possivelProduto.isEmpty()) {
+		if (possivelProduto.isEmpty()) {
 			return ResponseEntity.notFound().build();
 		}
-		
+
 		Produto produto = possivelProduto.get();
-		
+
 		Usuario usuario = usuarioLogado.getUsuario();
 		if (!produto.pertenceAoUsuario(usuario)) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
-		
+
 		Uploader uploader = new s3Uploader();
 		Set<String> links = uploader.uploadArquivos(request.getImagens());
 		produto.adicionarImagens(links);
-		
+
 		produtoRepository.save(produto);
-		
+
+		return ResponseEntity.ok().build();
+	}
+
+	@PostMapping(path = { "/{id}/opinioes" })
+	@Transactional
+	private ResponseEntity<?> cadastrarOpiniaoProduto(@PathVariable Long id,
+			@RequestBody @Valid OpiniaoProdutoRequest request, @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
+
+		Optional<Produto> possivelProduto = produtoRepository.findById(id);
+		if (possivelProduto.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		}
+
+		Usuario usuario = usuarioLogado.getUsuario();
+		Produto produto = possivelProduto.get();
+
+		OpiniaoProduto opiniao = request.toModel(usuario, produto);
+
+		produto.adicionarOpiniao(opiniao);
+
+		produtoRepository.save(produto);
+
 		return ResponseEntity.ok().build();
 	}
 
