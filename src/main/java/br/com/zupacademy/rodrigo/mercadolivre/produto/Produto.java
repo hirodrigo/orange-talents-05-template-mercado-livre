@@ -69,13 +69,13 @@ public class Produto {
 
 	@ManyToOne
 	private Usuario usuario;
-	
+
 	@OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
 	private Set<@Valid ImagemProduto> imagens;
-	
+
 	@OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
 	private Set<@Valid OpiniaoProduto> opinioes;
-	
+
 	@OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
 	private Set<@Valid PerguntaProduto> perguntas;
 
@@ -99,7 +99,7 @@ public class Produto {
 		Assert.isTrue(this.caracteristicas.size() >= 3, "Produtos precisam ter 3 categorias ou mais.");
 		Assert.isTrue(this.categoria != null, "Produtos pertencer a uma categoria.");
 	}
-	
+
 	public boolean pertenceAoUsuario(Usuario usuario) {
 		return this.usuario.equals(usuario);
 	}
@@ -130,27 +130,37 @@ public class Produto {
 	public String getDescricao() {
 		return descricao;
 	}
-	
-	public <T> Set<T> mapeiaCaracteristicas(
-			Function<CaracteristicaProduto, T> funcaoMapeadora) {
-		return this.caracteristicas.stream().map(funcaoMapeadora)
-				.collect(Collectors.toSet());
+
+	public String getEmailDono() {
+		return usuario.getLogin();
 	}
-	
-	public <T> Set<T> mapeiaImagens(
-			Function<ImagemProduto, T> funcaoMapeadora) {
-		return this.imagens.stream().map(funcaoMapeadora)
-				.collect(Collectors.toSet());
+
+	public <T> Set<T> mapeiaCaracteristicas(Function<CaracteristicaProduto, T> funcaoMapeadora) {
+		return this.caracteristicas.stream().map(funcaoMapeadora).collect(Collectors.toSet());
 	}
-	
-	public <T> Set<T> mapeiaPerguntas(
-			Function<PerguntaProduto, T> funcaoMapeadora) {
-		return this.perguntas.stream().map(funcaoMapeadora)
-				.collect(Collectors.toSet());
+
+	public <T> Set<T> mapeiaImagens(Function<ImagemProduto, T> funcaoMapeadora) {
+		return this.imagens.stream().map(funcaoMapeadora).collect(Collectors.toSet());
 	}
-	
+
+	public <T> Set<T> mapeiaPerguntas(Function<PerguntaProduto, T> funcaoMapeadora) {
+		return this.perguntas.stream().map(funcaoMapeadora).collect(Collectors.toSet());
+	}
+
 	public Opinioes getOpinioes() {
 		return new Opinioes(this.opinioes);
 	}
-	
+
+	public boolean possuiQuantidade(BigInteger quantidade) {
+		return (this.qtdDisponivel.compareTo(quantidade) == -1 ? false : true);
+	}
+
+	public boolean reduzirQuantidade(BigInteger quantidade) {
+		if (possuiQuantidade(quantidade)) {
+			this.qtdDisponivel = qtdDisponivel.subtract(quantidade);
+			return true;
+		}
+		return false;
+	}
+
 }

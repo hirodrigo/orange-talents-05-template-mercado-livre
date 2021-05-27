@@ -119,7 +119,7 @@ public class ProdutoController {
 
 		produtoRepository.save(produto);
 		
-		AcaoAposReceberNovaPergunta enviarEmail = new EnviarEmailDaPeguntaParaDono();
+		AcaoAposReceberNovaPergunta enviarEmail = new EnviarEmailDaPeguntaParaDono(produto.getEmailDono());
 		enviarEmail.executar(pergunta);
 
 		return ResponseEntity.ok().build();
