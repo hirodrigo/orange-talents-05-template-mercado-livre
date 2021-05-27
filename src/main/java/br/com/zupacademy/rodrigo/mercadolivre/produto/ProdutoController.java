@@ -20,6 +20,10 @@ import br.com.zupacademy.rodrigo.mercadolivre.categoria.CategoriaRepository;
 import br.com.zupacademy.rodrigo.mercadolivre.produto.imagem.ImagensProdutoRequest;
 import br.com.zupacademy.rodrigo.mercadolivre.produto.opiniao.OpiniaoProduto;
 import br.com.zupacademy.rodrigo.mercadolivre.produto.opiniao.OpiniaoProdutoRequest;
+import br.com.zupacademy.rodrigo.mercadolivre.produto.pergunta.AcaoAposReceberNovaPergunta;
+import br.com.zupacademy.rodrigo.mercadolivre.produto.pergunta.EnviarEmailDaPeguntaParaDono;
+import br.com.zupacademy.rodrigo.mercadolivre.produto.pergunta.PerguntaProduto;
+import br.com.zupacademy.rodrigo.mercadolivre.produto.pergunta.PerguntaProdutoRequest;
 import br.com.zupacademy.rodrigo.mercadolivre.security.UsuarioLogado;
 import br.com.zupacademy.rodrigo.mercadolivre.uploader.Uploader;
 import br.com.zupacademy.rodrigo.mercadolivre.uploader.s3uploader.s3Uploader;
@@ -90,6 +94,31 @@ public class ProdutoController {
 		produto.adicionarOpiniao(opiniao);
 
 		produtoRepository.save(produto);
+
+		return ResponseEntity.ok().build();
+	}
+
+	@PostMapping(path = { "/{id}/perguntas" })
+	@Transactional
+	private ResponseEntity<?> cadastrarPerguntaProduto(@PathVariable Long id,
+			@RequestBody @Valid PerguntaProdutoRequest request, @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
+
+		Optional<Produto> possivelProduto = produtoRepository.findById(id);
+		if (possivelProduto.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		}
+
+		Usuario usuario = usuarioLogado.getUsuario();
+		Produto produto = possivelProduto.get();
+
+		PerguntaProduto pergunta = request.toModel(usuario, produto);
+
+		produto.adicionarPergunta(pergunta);
+
+		produtoRepository.save(produto);
+		
+		AcaoAposReceberNovaPergunta enviarEmail = new EnviarEmailDaPeguntaParaDono();
+		enviarEmail.executar(pergunta);
 
 		return ResponseEntity.ok().build();
 	}

@@ -28,6 +28,7 @@ import br.com.zupacademy.rodrigo.mercadolivre.produto.caracteristica.Caracterist
 import br.com.zupacademy.rodrigo.mercadolivre.produto.caracteristica.CaracteristicaProdutoRequest;
 import br.com.zupacademy.rodrigo.mercadolivre.produto.imagem.ImagemProduto;
 import br.com.zupacademy.rodrigo.mercadolivre.produto.opiniao.OpiniaoProduto;
+import br.com.zupacademy.rodrigo.mercadolivre.produto.pergunta.PerguntaProduto;
 import br.com.zupacademy.rodrigo.mercadolivre.usuario.Usuario;
 
 @Entity
@@ -72,6 +73,9 @@ public class Produto {
 	
 	@OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
 	private Set<@Valid OpiniaoProduto> opinioes;
+	
+	@OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
+	private Set<@Valid PerguntaProduto> perguntas;
 
 	@Deprecated
 	public Produto() {
@@ -107,6 +111,10 @@ public class Produto {
 
 	public void adicionarOpiniao(OpiniaoProduto opiniaoProduto) {
 		opinioes.add(opiniaoProduto);
+	}
+
+	public void adicionarPergunta(PerguntaProduto perguntaProduto) {
+		perguntas.add(perguntaProduto);
 	}
 
 }
