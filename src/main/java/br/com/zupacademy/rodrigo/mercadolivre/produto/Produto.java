@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
@@ -28,6 +29,7 @@ import br.com.zupacademy.rodrigo.mercadolivre.produto.caracteristica.Caracterist
 import br.com.zupacademy.rodrigo.mercadolivre.produto.caracteristica.CaracteristicaProdutoRequest;
 import br.com.zupacademy.rodrigo.mercadolivre.produto.imagem.ImagemProduto;
 import br.com.zupacademy.rodrigo.mercadolivre.produto.opiniao.OpiniaoProduto;
+import br.com.zupacademy.rodrigo.mercadolivre.produto.opiniao.Opinioes;
 import br.com.zupacademy.rodrigo.mercadolivre.produto.pergunta.PerguntaProduto;
 import br.com.zupacademy.rodrigo.mercadolivre.usuario.Usuario;
 
@@ -117,4 +119,38 @@ public class Produto {
 		perguntas.add(perguntaProduto);
 	}
 
+	public String getNome() {
+		return nome;
+	}
+
+	public BigDecimal getValor() {
+		return valor;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+	
+	public <T> Set<T> mapeiaCaracteristicas(
+			Function<CaracteristicaProduto, T> funcaoMapeadora) {
+		return this.caracteristicas.stream().map(funcaoMapeadora)
+				.collect(Collectors.toSet());
+	}
+	
+	public <T> Set<T> mapeiaImagens(
+			Function<ImagemProduto, T> funcaoMapeadora) {
+		return this.imagens.stream().map(funcaoMapeadora)
+				.collect(Collectors.toSet());
+	}
+	
+	public <T> Set<T> mapeiaPerguntas(
+			Function<PerguntaProduto, T> funcaoMapeadora) {
+		return this.perguntas.stream().map(funcaoMapeadora)
+				.collect(Collectors.toSet());
+	}
+	
+	public Opinioes getOpinioes() {
+		return new Opinioes(this.opinioes);
+	}
+	
 }

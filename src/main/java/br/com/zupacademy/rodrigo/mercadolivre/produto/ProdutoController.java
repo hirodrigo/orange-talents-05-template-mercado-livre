@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.zupacademy.rodrigo.mercadolivre.categoria.CategoriaRepository;
+import br.com.zupacademy.rodrigo.mercadolivre.produto.detalhes.ProdutoDetalheResponse;
 import br.com.zupacademy.rodrigo.mercadolivre.produto.imagem.ImagensProdutoRequest;
 import br.com.zupacademy.rodrigo.mercadolivre.produto.opiniao.OpiniaoProduto;
 import br.com.zupacademy.rodrigo.mercadolivre.produto.opiniao.OpiniaoProdutoRequest;
@@ -121,6 +123,21 @@ public class ProdutoController {
 		enviarEmail.executar(pergunta);
 
 		return ResponseEntity.ok().build();
+	}
+
+	@GetMapping(path = { "/{id}" })
+	private ResponseEntity<ProdutoDetalheResponse> detalharProduto(@PathVariable Long id) {
+
+		Optional<Produto> possivelProduto = produtoRepository.findById(id);
+		if (possivelProduto.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		}
+
+		Produto produto = possivelProduto.get();
+
+		ProdutoDetalheResponse response = new ProdutoDetalheResponse(produto);
+
+		return ResponseEntity.ok().body(response);
 	}
 
 }
