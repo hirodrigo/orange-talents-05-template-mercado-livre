@@ -2,7 +2,9 @@ package br.com.zupacademy.rodrigo.mercadolivre.compra;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -10,11 +12,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 import org.springframework.web.util.UriComponentsBuilder;
 
+import br.com.zupacademy.rodrigo.mercadolivre.compra.transacao.Transacao;
 import br.com.zupacademy.rodrigo.mercadolivre.gateway.TipoGateway;
 import br.com.zupacademy.rodrigo.mercadolivre.produto.Produto;
 import br.com.zupacademy.rodrigo.mercadolivre.usuario.Usuario;
@@ -47,6 +51,13 @@ public class Compra {
 	
 	@ManyToOne
 	private Usuario comprador;
+	
+	@OneToMany(mappedBy = "compra", cascade = CascadeType.MERGE)
+	private Set<Transacao> transacoes;
+
+	@Deprecated
+	public Compra() {
+	}
 
 	public Compra(@NotNull @Positive BigInteger quantidade,
 			@NotNull TipoGateway gateway, Produto produto, Usuario comprador) {
@@ -55,7 +66,7 @@ public class Compra {
 		this.gateway = gateway;
 		this.produto = produto;
 		this.comprador = comprador;
-		this.status = StatusCompra.INICIADO;
+		this.status = StatusCompra.INICIADA;
 	}
 	
 	public Long getId() {
@@ -68,5 +79,40 @@ public class Compra {
 	
 	public String getEmailDonoProduto() {
 		return this.produto.getEmailDono();
+	}
+	
+	public String getEmailComprador() {
+		return this.comprador.getLogin();
+	}
+	
+	public String getNomeProduto() {
+		return this.produto.getNome();
+	}
+	
+	public Long getIdComprador() {
+		return this.comprador.getId();
+	}
+	
+	public Long getIdVendedor() {
+		return this.produto.getIdDono();
+	}
+	
+	public BigInteger getQuantidade() {
+		return quantidade;
+	}
+	
+	public BigDecimal getValor() {
+		return valor;
+	}
+	
+	public boolean compraEstaPaga() {
+		return this.status == StatusCompra.PAGA;
+	}
+	
+	public void adicionarTransacao(Transacao transacao) {
+		this.transacoes.add(transacao);
+		if (transacao.transacaoBemSucedida()) {
+			this.status = StatusCompra.PAGA;
+		}
 	}
 }

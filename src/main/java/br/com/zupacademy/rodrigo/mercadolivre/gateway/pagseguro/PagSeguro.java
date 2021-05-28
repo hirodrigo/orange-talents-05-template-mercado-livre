@@ -9,7 +9,7 @@ public class PagSeguro implements Gateway {
 
 	@Override
 	public String gerarCobranca(UriComponentsBuilder ucb, Compra compra) {
-		String redirectUrl = ucb.path("retorno-paypal/{id}").buildAndExpand(compra.getId()).toString();
+		String redirectUrl = ucb.path("retorno-pagseguro/{id}").buildAndExpand(compra.getId()).toString();
 		return "https://www.pagseguro.com?returnId=" + compra.getId() + "&redirectUrl=" + redirectUrl;
 	}
 

@@ -10,3 +10,4 @@ INSERT INTO produto (id, descricao, instante_cadastro, nome, qtd_disponivel, val
 INSERT INTO caracteristica_produto (id, descricao, nome, produto_id) VALUES (4, "Descrição da Característica do Produto 1", "Nome da Característica do Produto 4",2);
 INSERT INTO caracteristica_produto (id, descricao, nome, produto_id) VALUES (5, "Descrição da Característica do Produto 2", "Nome da Característica do Produto 5",2);
 INSERT INTO caracteristica_produto (id, descricao, nome, produto_id) VALUES (6, "Descrição da Característica do Produto 3", "Nome da Característica do Produto 6",2);
+INSERT INTO compra (`id`,`gateway`,`quantidade`,`status`,`valor`,`comprador_id`,`produto_id`) VALUES (1, 'PAGSEGURO', 10.00, 'INICIADA', 34.00, 1, 1);

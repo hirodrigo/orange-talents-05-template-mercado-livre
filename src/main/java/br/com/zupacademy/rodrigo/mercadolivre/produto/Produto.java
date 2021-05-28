@@ -134,6 +134,10 @@ public class Produto {
 	public String getEmailDono() {
 		return usuario.getLogin();
 	}
+	
+	public Long getIdDono() {
+		return usuario.getId();
+	}
 
 	public <T> Set<T> mapeiaCaracteristicas(Function<CaracteristicaProduto, T> funcaoMapeadora) {
 		return this.caracteristicas.stream().map(funcaoMapeadora).collect(Collectors.toSet());

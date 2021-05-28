@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import br.com.zupacademy.rodrigo.mercadolivre.compra.acoes.nova.AcaoAposReceberNovaCompra;
+import br.com.zupacademy.rodrigo.mercadolivre.compra.acoes.nova.EnviarEmailDeCompraParaDono;
 import br.com.zupacademy.rodrigo.mercadolivre.produto.Produto;
 import br.com.zupacademy.rodrigo.mercadolivre.produto.ProdutoRepository;
 import br.com.zupacademy.rodrigo.mercadolivre.security.UsuarioLogado;

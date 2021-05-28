@@ -1,9 +1,13 @@
-package br.com.zupacademy.rodrigo.mercadolivre.compra;
+package br.com.zupacademy.rodrigo.mercadolivre.compra.acoes.nova;
 
+import org.springframework.stereotype.Component;
+
+import br.com.zupacademy.rodrigo.mercadolivre.compra.Compra;
 import br.com.zupacademy.rodrigo.mercadolivre.email.Email;
 import br.com.zupacademy.rodrigo.mercadolivre.email.EnvioEmail;
 import br.com.zupacademy.rodrigo.mercadolivre.email.fake.EnvioFake;
 
+@Component
 public class EnviarEmailDeCompraParaDono implements AcaoAposReceberNovaCompra {
 
 	@Override

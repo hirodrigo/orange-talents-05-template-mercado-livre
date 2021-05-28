@@ -49,6 +49,10 @@ public class Usuario {
 	public String getSenha() {
 		return senha;
 	}
+	
+	public Long getId() {
+		return id;
+	}
 
 	@Override
 	public int hashCode() {
